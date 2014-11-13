@@ -18,6 +18,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.rahul.sunshine.Util.Util;
+
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,7 +82,7 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                new FetchWeather().execute();
+                new FetchWeather().execute(7);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -86,10 +90,12 @@ public class ForecastFragment extends Fragment {
 
     }
 
-    class FetchWeather extends AsyncTask<Void, Void, Void> {
+    class FetchWeather extends AsyncTask<Integer, Void, String[]> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String[] doInBackground(Integer... params) {
+
+            String[] results = new String[params[0]];
 
             HttpURLConnection httpURLConnection = null;
             BufferedReader bufferedReader = null;
@@ -97,9 +103,6 @@ public class ForecastFragment extends Fragment {
             String forecastJsonString = null;
 
             try {
-
-
-
 
                 Uri uri = Uri.parse("http://api.openweathermap.org/data/2.5/forecast/daily")
                         .buildUpon()
@@ -136,7 +139,15 @@ public class ForecastFragment extends Fragment {
                     forecastJsonString = stringBuffer.toString();
                 }
 
-                Log.v("DATA:",forecastJsonString);
+                try {
+                    results = Util.getWeatherDataFromJson(forecastJsonString,params[0]);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+//                Log.v("DATA:",forecastJsonString);
+                Log.v("DATA:",results.toString());
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -152,7 +163,8 @@ public class ForecastFragment extends Fragment {
                         e.printStackTrace();
                     }
             }
-            return null;
+            return results;
         }
     }
+
 }
