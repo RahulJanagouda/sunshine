@@ -21,6 +21,7 @@ import android.widget.ListView;
 import com.example.rahul.sunshine.Util.Util;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,11 +31,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
+
+    ArrayAdapter<String> forecastAdapter;
 
     public ForecastFragment() {
     }
@@ -59,7 +63,7 @@ public class ForecastFragment extends Fragment {
         tempData.add("Fri - Foggy - 70/46");
         tempData.add("Sat - Sunny - 76/68");
 
-        ArrayAdapter<String> forecastAdapter = new ArrayAdapter<String>(
+        forecastAdapter= new ArrayAdapter<String>(
                 getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
@@ -82,7 +86,8 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                new FetchWeather().execute(7);
+                new FetchWeather().execute("123");
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -90,12 +95,14 @@ public class ForecastFragment extends Fragment {
 
     }
 
-    class FetchWeather extends AsyncTask<Integer, Void, String[]> {
+    class FetchWeather extends AsyncTask<String, Void, String[]>  {
 
         @Override
-        protected String[] doInBackground(Integer... params) {
+        protected String[] doInBackground(String... params) {
 
-            String[] results = new String[params[0]];
+            if(params.length == 0){
+                return null;
+            }
 
             HttpURLConnection httpURLConnection = null;
             BufferedReader bufferedReader = null;
@@ -139,15 +146,12 @@ public class ForecastFragment extends Fragment {
                     forecastJsonString = stringBuffer.toString();
                 }
 
-                try {
-                    results = Util.getWeatherDataFromJson(forecastJsonString,params[0]);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
+
 
 
 //                Log.v("DATA:",forecastJsonString);
-                Log.v("DATA:",results.toString());
+//                Log.v("DATA:",results[0 ].toString());
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -163,7 +167,26 @@ public class ForecastFragment extends Fragment {
                         e.printStackTrace();
                     }
             }
-            return results;
+
+
+            try {
+                return Util.getWeatherDataFromJson(forecastJsonString,7);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            super.onPostExecute(strings);
+
+            if(strings!=null && strings.length>0){
+
+                forecastAdapter.clear();
+                forecastAdapter.addAll(strings);
+            }
+
         }
     }
 
