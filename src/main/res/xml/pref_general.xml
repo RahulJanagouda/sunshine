@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="@string/pref_location_longitude_default"
+        android:inputType="numberDecimal|numberSigned"
+        android:key="@string/pref_location_longitude_key"
+        android:singleLine="true"
+        android:title="@string/pref_location_longitude_label" />
+    <EditTextPreference
+        android:defaultValue="@string/pref_location_latitude_default"
+        android:inputType="numberDecimal|numberSigned"
+        android:key="@string/pref_location_latitude_key"
+        android:singleLine="true"
+        android:title="@string/pref_location_latitude_label" />
+    <ListPreference
+        android:entries="@array/pref_temperature_units_entries"
+        android:entryValues="@array/pref_temperature_units_entryValues"
+        android:key="@string/pref_temperature_key"
+        android:defaultValue="@string/pref_temperature_default"
+        android:title="@string/pref_temperature_title" />
+
+</PreferenceScreen>

@@ -5,9 +5,12 @@ package com.example.rahul.sunshine;
  */
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +18,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.rahul.sunshine.Util.Util;
 
@@ -50,28 +55,39 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String latitude = settings.getString(getString(R.string.pref_location_latitude_key), getString(R.string.pref_location_latitude_default));
+        String longitude = settings.getString(getString(R.string.pref_location_longitude_key), getString(R.string.pref_location_longitude_default));
+        String units = settings.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_default));
+        new FetchWeather().execute(latitude,longitude,units);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 
-        ArrayList<String> tempData = new ArrayList<String>();
-        tempData.add("Today - Sunny - 88/63");
-        tempData.add("Tomorrow - Foggy - 70/46");
-        tempData.add("Weds - Cloudy - 72/63");
-        tempData.add("Thurs - Rainy - 64/51");
-        tempData.add("Fri - Foggy - 70/46");
-        tempData.add("Sat - Sunny - 76/68");
-
         forecastAdapter= new ArrayAdapter<String>(
                 getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
-                tempData
+        new ArrayList<String>()
         );
 
         ListView forecastListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         forecastListView.setAdapter(forecastAdapter);
+
+        forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(getActivity(),""+parent.getItemAtPosition(position),Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(),DetailActivity.class).putExtra(Intent.EXTRA_TEXT, ""+parent.getItemAtPosition(position)));
+            }
+        });
 
         return rootView;
     }
@@ -86,9 +102,13 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                new FetchWeather().execute("123");
-
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String latitude = settings.getString(getString(R.string.pref_location_latitude_key), getString(R.string.pref_location_latitude_default));
+                String longitude = settings.getString(getString(R.string.pref_location_longitude_key), getString(R.string.pref_location_longitude_default));
+                String units = settings.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_default));
+                new FetchWeather().execute(latitude,longitude,units);
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -104,6 +124,10 @@ public class ForecastFragment extends Fragment {
                 return null;
             }
 
+            String latitude = params[0];
+            String longitude = params[1];
+            String unit = params[2];
+
             HttpURLConnection httpURLConnection = null;
             BufferedReader bufferedReader = null;
 
@@ -113,11 +137,11 @@ public class ForecastFragment extends Fragment {
 
                 Uri uri = Uri.parse("http://api.openweathermap.org/data/2.5/forecast/daily")
                         .buildUpon()
-                        .appendQueryParameter("lon", "74.5")
-                        .appendQueryParameter("lat","15.87")
+                        .appendQueryParameter("lat",latitude)
+                        .appendQueryParameter("lon", longitude)
                         .appendQueryParameter("cnt","7")
                         .appendQueryParameter("mode","json")
-                        .appendQueryParameter("units","metrics").build();
+                        .appendQueryParameter("units",unit).build();
 
                 URL forecastUrl = new URL(uri.toString());
 
@@ -150,7 +174,7 @@ public class ForecastFragment extends Fragment {
 
 
 
-//                Log.v("DATA:",forecastJsonString);
+                Log.v("DATA:",forecastJsonString);
 //                Log.v("DATA:",results[0 ].toString());
 
             } catch (MalformedURLException e) {
