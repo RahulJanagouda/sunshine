@@ -4,13 +4,13 @@ package com.example.rahul.sunshine;
  * Created by rahul on 10/11/14.
  */
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -174,7 +174,7 @@ public class ForecastFragment extends Fragment {
 
 
 
-                Log.v("DATA:",forecastJsonString);
+//                Log.v("DATA:",forecastJsonString);
 //                Log.v("DATA:",results[0 ].toString());
 
             } catch (MalformedURLException e) {

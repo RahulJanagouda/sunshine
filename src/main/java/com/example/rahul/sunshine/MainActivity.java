@@ -1,41 +1,32 @@
 package com.example.rahul.sunshine;
 
-import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.v(TAG," in onCreate ");
+
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new ForecastFragment())
                     .commit();
         }
@@ -79,4 +70,33 @@ public class MainActivity extends Activity {
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG," in onStart ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG," in onResume ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v(TAG," in onPause ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v(TAG," in onStop ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG," in onDestroy ");
+    }
 }
