@@ -9,7 +9,6 @@ import android.os.Build;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.example.rahul.sunshine.data.WeatherContract;
 import com.example.rahul.sunshine.data.WeatherContract.WeatherEntry;
 import com.example.rahul.sunshine.data.WeatherContract.LocationEntry;
 
@@ -245,7 +244,7 @@ public class TestProvider extends AndroidTestCase {
         weatherValues.put(WeatherEntry.COLUMN_MAX_TEMP, 85);
         weatherValues.put(WeatherEntry.COLUMN_MIN_TEMP, 35);
         weatherValues.put(WeatherEntry.COLUMN_SHORT_DESC, "Cats and Dogs");
-        weatherValues.put(WeatherEntry.COLUMN_WIND, 3.4);
+        weatherValues.put(WeatherEntry.COLUMN_WIND_SPEED, 3.4);
         weatherValues.put(WeatherEntry.COLUMN_WEATHER_ID, 42);
 
         return weatherValues;
@@ -256,8 +255,8 @@ public class TestProvider extends AndroidTestCase {
         ContentValues testValues = new ContentValues();
         testValues.put(LocationEntry.COLUMN_LOCATION_SETTING, KALAMAZOO_LOCATION_SETTING);
         testValues.put(LocationEntry.COLUMN_CITY_NAME, "Kalamazoo");
-        testValues.put(LocationEntry.COLUMN_LATITUDE, 42.2917);
-        testValues.put(LocationEntry.COLUMN_LONGITUDE , -85.5872);
+        testValues.put(LocationEntry.COLUMN_COORD_LAT, 42.2917);
+        testValues.put(LocationEntry.COLUMN_COORD_LONG, -85.5872);
 
         return testValues;
     }

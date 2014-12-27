@@ -30,8 +30,8 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                         +LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                         +LocationEntry.COLUMN_CITY_NAME + " TEXT NOT NULL, "
                         +LocationEntry.COLUMN_LOCATION_SETTING + " TEXT NOT NULL, "
-                        +LocationEntry.COLUMN_LONGITUDE + " REAL NOT NULL, "
-                        +LocationEntry.COLUMN_LATITUDE + " REAL NOT NULL, "
+                        +LocationEntry.COLUMN_COORD_LONG + " REAL NOT NULL, "
+                        +LocationEntry.COLUMN_COORD_LAT + " REAL NOT NULL, "
 
                         + " UNIQUE (" + LocationEntry.COLUMN_LOCATION_SETTING +") ON CONFLICT IGNORE); ";
 
@@ -49,7 +49,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
 
                         + WeatherEntry.COLUMN_HUMIDITY + " REAL NOT NULL, "
                         + WeatherEntry.COLUMN_PRESSURE + " REAL NOT NULL, "
-                        + WeatherEntry.COLUMN_WIND + " REAL NOT NULL, "
+                        + WeatherEntry.COLUMN_WIND_SPEED + " REAL NOT NULL, "
                         + WeatherEntry.COLUMN_DEGREES + " REAL NOT NULL, "
 
                 +" FOREIGN KEY ( "+WeatherEntry.COLUMN_LOC_KEY +" ) REFERENCES "

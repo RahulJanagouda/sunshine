@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.example.rahul.sunshine.data.WeatherContract;
 import com.example.rahul.sunshine.data.WeatherContract.LocationEntry;
 import com.example.rahul.sunshine.data.WeatherContract.WeatherEntry;
 import com.example.rahul.sunshine.data.WeatherDbHelper;
@@ -95,7 +94,7 @@ public class TestDb extends AndroidTestCase {
         weatherValues.put(WeatherEntry.COLUMN_MAX_TEMP, 75);
         weatherValues.put(WeatherEntry.COLUMN_MIN_TEMP, 65);
         weatherValues.put(WeatherEntry.COLUMN_SHORT_DESC, "Asteroids");
-        weatherValues.put(WeatherEntry.COLUMN_WIND, 5.5);
+        weatherValues.put(WeatherEntry.COLUMN_WIND_SPEED, 5.5);
         weatherValues.put(WeatherEntry.COLUMN_WEATHER_ID, 321);
 
         return weatherValues;
@@ -106,8 +105,8 @@ public class TestDb extends AndroidTestCase {
         ContentValues testValues = new ContentValues();
         testValues.put(LocationEntry.COLUMN_LOCATION_SETTING, TEST_LOCATION);
         testValues.put(LocationEntry.COLUMN_CITY_NAME, "North Pole");
-        testValues.put(LocationEntry.COLUMN_LATITUDE, 64.7488);
-        testValues.put(LocationEntry.COLUMN_LONGITUDE, -147.353);
+        testValues.put(LocationEntry.COLUMN_COORD_LAT, 64.7488);
+        testValues.put(LocationEntry.COLUMN_COORD_LONG, -147.353);
 
         return testValues;
     }

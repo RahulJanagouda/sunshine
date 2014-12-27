@@ -21,14 +21,10 @@ import java.util.Map;
 public class Util {
 
 
-    public static Map<String,String> getPreferredLocation(Context context) {
+    public static String getPreferredLocation(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Map<String,String> location = new HashMap<String, String>();
-        location.put("latitude", prefs.getString(context.getString(R.string.pref_location_latitude_key),
-                context.getString(R.string.pref_location_latitude_default)) );
-        location.put("longitude", prefs.getString(context.getString(R.string.pref_location_longitude_key),
-                context.getString(R.string.pref_location_longitude_default)) );
-        return location;
+        return prefs.getString(context.getString(R.string.pref_location_key),
+                context.getString(R.string.pref_location_default));
     }
 
 }

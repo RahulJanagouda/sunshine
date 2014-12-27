@@ -13,18 +13,12 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 
-    public static final String TAG = MainActivity.class.getSimpleName();
-
-
-
-
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.v(TAG," in onCreate ");
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new ForecastFragment())
@@ -46,57 +40,38 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        switch (id){
-            case R.id.action_view_location:
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                String lat= preferences.getString(getString(R.string.pref_location_latitude_key), getString(R.string.pref_location_latitude_default));
-                String lon= preferences.getString(getString(R.string.pref_location_longitude_key), getString(R.string.pref_location_longitude_default));
-                Uri geoURI = Uri.parse("geo:"+lat+","+lon+"?z=11");
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-                mapIntent.setData(geoURI);
-                if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(mapIntent);
-                }
-                return true;
-
-            case R.id.action_settings:
-                startActivity(new Intent(this,SettingsActivity.class));
-                return true;
-
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
         }
-
+        if (id == R.id.action_view_location) {
+            openPreferredLocationInMap();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
+    private void openPreferredLocationInMap() {
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String location = sharedPrefs.getString(
+                getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG," in onStart ");
-    }
+        // Using the URI scheme for showing a location found on a map.  This super-handy
+        // intent can is detailed in the "Common Intents" page of Android's developer site:
+        // http://developer.android.com/guide/components/intents-common.html#Maps
+        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
+                .appendQueryParameter("q", location)
+                .build();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG," in onResume ");
-    }
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG," in onPause ");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.v(TAG," in onStop ");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v(TAG," in onDestroy ");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Log.d(LOG_TAG, "Couldn't call " + location + ", no receiving apps installed!");
+        }
     }
 }

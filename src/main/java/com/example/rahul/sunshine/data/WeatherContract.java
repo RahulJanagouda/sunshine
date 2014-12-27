@@ -4,6 +4,9 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by rahul on 1/12/14.
  */
@@ -62,7 +65,7 @@ public class WeatherContract {
 
         public static final String COLUMN_PRESSURE = "pressure";
 
-        public static final String COLUMN_WIND = "wind";
+        public static final String COLUMN_WIND_SPEED = "wind";
 
         public static final String COLUMN_DEGREES = "degrees";
 
@@ -114,12 +117,27 @@ public class WeatherContract {
 
         public static final String COLUMN_LOCATION_SETTING = "loc_settings";
         public static final String COLUMN_CITY_NAME = "city_name";
-        public static final String COLUMN_LONGITUDE = "longitude";
-        public static final String COLUMN_LATITUDE = "latitude";
+        public static final String COLUMN_COORD_LONG = "longitude";
+        public static final String COLUMN_COORD_LAT = "latitude";
 
                 public static Uri buildLocationUri(long id) {
                     return ContentUris.withAppendedId(CONTENT_URI, id);
                 }
+    }
+
+
+    // Format used for storing dates in the database.  ALso used for converting those strings
+    // back into date objects for comparison/processing.
+    public static final String DATE_FORMAT = "yyyyMMdd";
+
+    /**
+     * Converts unix time to a string representation, used for easy comparison and database lookup.
+     * @param date The input date
+     * @return a DB-friendly representation of the date, using the format defined in DATE_FORMAT.
+     */
+    public static String getDbDateString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        return sdf.format(date);
     }
 
 

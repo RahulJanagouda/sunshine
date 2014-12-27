@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <EditTextPreference
-        android:defaultValue="@string/pref_location_longitude_default"
-        android:inputType="numberDecimal|numberSigned"
-        android:key="@string/pref_location_longitude_key"
-        android:singleLine="true"
-        android:title="@string/pref_location_longitude_label" />
-    <EditTextPreference
-        android:defaultValue="@string/pref_location_latitude_default"
-        android:inputType="numberDecimal|numberSigned"
-        android:key="@string/pref_location_latitude_key"
-        android:singleLine="true"
-        android:title="@string/pref_location_latitude_label" />
+        android:title="@string/pref_location_label"
+        android:key="@string/pref_location_key"
+        android:defaultValue="@string/pref_location_default"
+        android:inputType="text"
+        android:singleLine="true" />
+
     <ListPreference
-        android:entries="@array/pref_temperature_units_entries"
-        android:entryValues="@array/pref_temperature_units_entryValues"
-        android:key="@string/pref_temperature_key"
-        android:defaultValue="@string/pref_temperature_default"
-        android:title="@string/pref_temperature_title" />
+        android:title="@string/pref_units_label"
+        android:key="@string/pref_units_key"
+        android:defaultValue="@string/pref_units_metric"
+        android:entryValues="@array/pref_units_values"
+        android:entries="@array/pref_units_options" />
 
 </PreferenceScreen>
