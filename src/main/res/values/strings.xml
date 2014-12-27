@@ -26,6 +26,9 @@
     <string name="pref_temperature_title">Pick your units</string>
     <string name="pref_temperature_default">metric</string>
 
+    <string name="pref_temperature_metric">metric</string>
+    <string name="pref_temperature_imperial">imperial</string>
+
     <string name="view_user_location_label">View Location</string>
 
     <string name="share_whether">Share</string>

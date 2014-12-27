@@ -37,6 +37,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -57,11 +58,11 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String latitude = settings.getString(getString(R.string.pref_location_latitude_key), getString(R.string.pref_location_latitude_default));
-        String longitude = settings.getString(getString(R.string.pref_location_longitude_key), getString(R.string.pref_location_longitude_default));
-        String units = settings.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_default));
-        new FetchWeather().execute(latitude,longitude,units);
+        Map<String,String> location = Util.getPreferredLocation(getActivity());
+        String latitude = location.get("latitude");
+        String longitude = location.get("longitude");
+
+        new FetchWeatherTask(getActivity(),forecastAdapter).execute(latitude, longitude);
 
     }
 
@@ -102,11 +103,10 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String latitude = settings.getString(getString(R.string.pref_location_latitude_key), getString(R.string.pref_location_latitude_default));
-                String longitude = settings.getString(getString(R.string.pref_location_longitude_key), getString(R.string.pref_location_longitude_default));
-                String units = settings.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_default));
-                new FetchWeather().execute(latitude,longitude,units);
+                Map<String,String> location = Util.getPreferredLocation(getActivity());
+                String latitude = location.get("latitude");
+                String longitude = location.get("longitude");
+                new FetchWeatherTask(getActivity(),forecastAdapter).execute(latitude, longitude);
                 return true;
 
             default:
@@ -114,104 +114,4 @@ public class ForecastFragment extends Fragment {
         }
 
     }
-
-    class FetchWeather extends AsyncTask<String, Void, String[]>  {
-
-        @Override
-        protected String[] doInBackground(String... params) {
-
-            if(params.length == 0){
-                return null;
-            }
-
-            String latitude = params[0];
-            String longitude = params[1];
-            String unit = params[2];
-
-            HttpURLConnection httpURLConnection = null;
-            BufferedReader bufferedReader = null;
-
-            String forecastJsonString = null;
-
-            try {
-
-                Uri uri = Uri.parse("http://api.openweathermap.org/data/2.5/forecast/daily")
-                        .buildUpon()
-                        .appendQueryParameter("lat",latitude)
-                        .appendQueryParameter("lon", longitude)
-                        .appendQueryParameter("cnt","7")
-                        .appendQueryParameter("mode","json")
-                        .appendQueryParameter("units",unit).build();
-
-                URL forecastUrl = new URL(uri.toString());
-
-                httpURLConnection = (HttpURLConnection) forecastUrl.openConnection();
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.connect();
-
-                StringBuffer stringBuffer = new StringBuffer();
-
-                InputStream inputStream = httpURLConnection.getInputStream();
-
-                if (inputStream == null) {
-                    forecastJsonString = null;
-                }
-
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line = null;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(line + "\n");
-                }
-
-                if (stringBuffer.length() == 0) {
-                    forecastJsonString = null;
-                } else {
-                    forecastJsonString = stringBuffer.toString();
-                }
-
-
-
-
-
-//                Log.v("DATA:",forecastJsonString);
-//                Log.v("DATA:",results[0 ].toString());
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (httpURLConnection != null)
-                    httpURLConnection.disconnect();
-                if (bufferedReader != null)
-                    try {
-                        bufferedReader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-            }
-
-
-            try {
-                return Util.getWeatherDataFromJson(forecastJsonString,7);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String[] strings) {
-            super.onPostExecute(strings);
-
-            if(strings!=null && strings.length>0){
-
-                forecastAdapter.clear();
-                forecastAdapter.addAll(strings);
-            }
-
-        }
-    }
-
 }
