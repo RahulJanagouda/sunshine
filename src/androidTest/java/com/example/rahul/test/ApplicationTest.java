@@ -1,4 +1,4 @@
-package com.example.rahul.sunshine;
+package com.example.rahul.test;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
