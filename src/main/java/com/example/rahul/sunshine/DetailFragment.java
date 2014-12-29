@@ -10,7 +10,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,6 +65,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mHumidityView;
     private TextView mWindView;
     private TextView mPressureView;
+    private WindSpeed mWindSpeed;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -100,6 +100,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+        mWindSpeed = (WindSpeed) rootView.findViewById(R.id.windSpeed);
         return rootView;
     }
 
@@ -200,12 +201,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             boolean isMetric = Utility.isMetric(getActivity());
 
             double high = data.getDouble(data.getColumnIndex(WeatherEntry.COLUMN_MAX_TEMP));
-            String highString = Utility.formatTemperature(getActivity(), high, isMetric);
+            String highString = Utility.formatTemperature(getActivity(), high);
             mHighTempView.setText(highString);
 
             // Read low temperature from cursor and update view
             double low = data.getDouble(data.getColumnIndex(WeatherEntry.COLUMN_MIN_TEMP));
-            String lowString = Utility.formatTemperature(getActivity(), low, isMetric);
+            String lowString = Utility.formatTemperature(getActivity(), low);
             mLowTempView.setText(lowString);
 
             // Read humidity from cursor and update view
@@ -223,6 +224,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             // We still need this for the share intent
             mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
+
+            mWindSpeed.setDegrees(data.getFloat(
+                    data.getColumnIndex(WeatherEntry.COLUMN_DEGREES)));
+            mWindSpeed.setSpeed(data.getFloat(
+                    data.getColumnIndex(WeatherEntry.COLUMN_WIND_SPEED)));
 
             // If onCreateOptionsMenu has already happened, we need to update the share intent now.
             if (mShareActionProvider != null) {

@@ -107,5 +107,12 @@
                 android:layout_width="match_parent"
                 android:textAppearance="?android:textAppearanceLarge" />
         </LinearLayout>
+        <com.example.rahul.sunshine.WindSpeed
+            android:id="@+id/windSpeed"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/wind_speed_discription"
+            />
     </LinearLayout>
+
 </ScrollView>

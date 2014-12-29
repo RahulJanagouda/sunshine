@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.rahul.sunshine.data.WeatherContract.WeatherEntry;
 import com.example.rahul.sunshine.data.WeatherContract.LocationEntry;
+import com.example.rahul.sunshine.data.WeatherContract.WeatherEntry;
 
 
 /**
